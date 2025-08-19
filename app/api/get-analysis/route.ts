@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get session data from memory (in production, use a database)
-    const sessions = global.baziSessions || new Map();
+    const sessions = (global as any).baziSessions || new Map();
     const sessionData = sessions.get(analysisId);
 
     if (!sessionData) {

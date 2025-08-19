@@ -1,12 +1,5 @@
 // BaZi MCP Service - Provides accurate BaZi calculations using Cantian AI's MCP server
 
-interface BaZiMCPRequest {
-  solarDatetime?: string;
-  lunarDatetime?: string;
-  gender?: number; // 0 for female, 1 for male
-  eightCharProviderSect?: number; // 1 or 2 for early/late Zi hour
-}
-
 interface BaZiMCPResponse {
   gender: string;
   solarCalendar: string;
@@ -77,7 +70,7 @@ export class BaZiMCPService {
       } else {
         throw new Error('getBaziDetail function not found');
       }
-    } catch (error) {
+    } catch {
       console.warn('BaZi MCP server not available, using fallback calculations');
       this.mcpAvailable = false;
     }
@@ -181,31 +174,31 @@ export class BaZiMCPService {
   /**
    * Format the raw MCP response into our expected structure
    */
-  private formatMCPResponse(rawResponse: any): BaZiMCPResponse {
+  private formatMCPResponse(rawResponse: Record<string, unknown>): BaZiMCPResponse {
     return {
-      gender: rawResponse['性别'] || '',
-      solarCalendar: rawResponse['阳历'] || '',
-      lunarCalendar: rawResponse['农历'] || '',
-      eightCharacters: rawResponse['八字'] || '',
-      zodiac: rawResponse['生肖'] || '',
-      dayMaster: rawResponse['日主'] || '',
+      gender: (rawResponse['性别'] as string) || '',
+      solarCalendar: (rawResponse['阳历'] as string) || '',
+      lunarCalendar: (rawResponse['农历'] as string) || '',
+      eightCharacters: (rawResponse['八字'] as string) || '',
+      zodiac: (rawResponse['生肖'] as string) || '',
+      dayMaster: (rawResponse['日主'] as string) || '',
       fourPillars: {
-        year: this.formatPillar(rawResponse['年柱']),
-        month: this.formatPillar(rawResponse['月柱']),
-        day: this.formatPillar(rawResponse['日柱']),
-        hour: this.formatPillar(rawResponse['时柱']),
+        year: this.formatPillar(rawResponse['年柱'] as Record<string, unknown>),
+        month: this.formatPillar(rawResponse['月柱'] as Record<string, unknown>),
+        day: this.formatPillar(rawResponse['日柱'] as Record<string, unknown>),
+        hour: this.formatPillar(rawResponse['时柱'] as Record<string, unknown>),
       },
-      fetalElement: rawResponse['胎元'] || '',
-      lifePalace: rawResponse['命宫'] || '',
-      bodyPalace: rawResponse['身宫'] || '',
-      deityStars: Object.values(rawResponse['神煞'] || {}).flat() || [],
-      luckCycles: rawResponse['大运']?.['大运'] || [],
+      fetalElement: (rawResponse['胎元'] as string) || '',
+      lifePalace: (rawResponse['命宫'] as string) || '',
+      bodyPalace: (rawResponse['身宫'] as string) || '',
+      deityStars: (Object.values((rawResponse['神煞'] as Record<string, unknown>) || {}).flat() as string[]) || [],
+      luckCycles: ((rawResponse['大运'] as Record<string, unknown>)?.['大运'] as LuckCycle[]) || [],
       elementalClashes: [],
       emptyElements: [],
     };
   }
 
-  private formatPillar(pillarData: any): PillarData {
+  private formatPillar(pillarData: Record<string, unknown>): PillarData {
     if (!pillarData) {
       return {
         heavenlyStem: '',
@@ -220,13 +213,13 @@ export class BaZiMCPService {
     }
 
     return {
-      heavenlyStem: pillarData['天干']?.['天干'] || '',
-      earthlyBranch: pillarData['地支']?.['地支'] || '',
-      fiveElements: pillarData['天干']?.['五行'] || '',
-      yinYang: pillarData['天干']?.['阴阳'] || '',
-      tenGods: pillarData['天干']?.['十神'] || '',
-      hiddenStems: Object.values(pillarData['地支']?.['藏干'] || {}).map((item: any) => item?.['天干']).filter(Boolean),
-      nayin: pillarData['纳音'] || '',
+      heavenlyStem: (pillarData['天干'] as string) || '',
+      earthlyBranch: (pillarData['地支'] as string) || '',
+      fiveElements: (pillarData['五行'] as string) || '',
+      yinYang: (pillarData['阴阳'] as string) || '',
+      tenGods: (pillarData['十神'] as string) || '',
+      hiddenStems: [],
+      nayin: (pillarData['纳音'] as string) || '',
       empty: pillarData['空亡'] ? true : false,
     };
   }

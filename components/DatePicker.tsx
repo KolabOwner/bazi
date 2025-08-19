@@ -38,7 +38,7 @@ export function DatePicker({ value, onChange, open, onOpenChange }: DatePickerPr
   useEffect(() => {
     if (open) {
       setTimeout(() => {
-        const scrollToCenter = (ref: React.RefObject<HTMLDivElement>, index: number) => {
+        const scrollToCenter = (ref: React.RefObject<HTMLDivElement | null>, index: number) => {
           if (ref.current) {
             const itemHeight = 34;
             const containerHeight = 200;

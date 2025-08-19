@@ -62,8 +62,8 @@ export async function POST(request: NextRequest) {
 
     // TODO: Store sessionData in database
     // For now, we'll store it in a simple in-memory cache
-    global.baziSessions = global.baziSessions || new Map();
-    global.baziSessions.set(analysisId, sessionData);
+    (global as any).baziSessions = (global as any).baziSessions || new Map();
+    (global as any).baziSessions.set(analysisId, sessionData);
 
     return NextResponse.json({ 
       id: analysisId, 

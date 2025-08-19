@@ -1,5 +1,5 @@
 import moment from 'moment-timezone';
-import { getCityTimezone } from 'city-timezones';
+import { lookupViaCity } from 'city-timezones';
 
 interface BaziInput {
   birthDate: string; // "2004-04-21"
@@ -42,7 +42,7 @@ export class TimezoneBaziService {
 
     // Use city-timezones package as fallback
     try {
-      const cityInfo = getCityTimezone(city);
+      const cityInfo = lookupViaCity(city);
       if (cityInfo && cityInfo.length > 0) {
         return cityInfo[0].timezone;
       }

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@genkit-ai/ai": "^1.16.1",
+    "@genkit-ai/firebase": "^1.16.1",
     "@genkit-ai/googleai": "^1.16.1",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-tabs": "^1.1.13",
