@@ -127,8 +127,8 @@ function calculateElementsFromMCP(mcpData: Record<string, unknown>) {
   if (fourPillars) {
     [fourPillars.year, fourPillars.month, fourPillars.day, fourPillars.hour]
       .forEach((pillar: Record<string, string>) => {
-        if (pillar?.fiveElements) {
-          const chineseElement = pillar.fiveElements;
+        const chineseElement = pillar?.fiveElements || pillar?.['五行'];
+        if (chineseElement) {
           const englishElement = elementMap[chineseElement];
           if (englishElement) {
             elements[englishElement] += 1;
@@ -156,8 +156,8 @@ function calculateYinYangFromMCP(mcpData: Record<string, unknown>) {
   if (fourPillars) {
     [fourPillars.year, fourPillars.month, fourPillars.day, fourPillars.hour]
       .forEach((pillar: Record<string, string>) => {
-        if (pillar?.yinYang) {
-          const yinYang = pillar.yinYang;
+        const yinYang = pillar?.yinYang || pillar?.['阴阳'];
+        if (yinYang) {
           if (yinYang === '阴') {
             yin += 1;
           } else if (yinYang === '阳') {
@@ -186,10 +186,10 @@ function generatePatternsFromMCP(mcpData: Record<string, unknown>): string[] {
   // Analyze Ten Gods for patterns
   const fourPillars = mcpData.fourPillars as Record<string, Record<string, string>>;
   const tenGods = [
-    fourPillars?.year?.tenGods,
-    fourPillars?.month?.tenGods,
-    fourPillars?.day?.tenGods,
-    fourPillars?.hour?.tenGods,
+    fourPillars?.year?.tenGods || fourPillars?.year?.['十神'],
+    fourPillars?.month?.tenGods || fourPillars?.month?.['十神'],
+    fourPillars?.day?.tenGods || fourPillars?.day?.['十神'],
+    fourPillars?.hour?.tenGods || fourPillars?.hour?.['十神'],
   ].filter(Boolean);
   
   if (tenGods.includes('正财') || tenGods.includes('偏财')) {
