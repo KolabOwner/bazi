@@ -69,27 +69,27 @@ export async function GET(request: NextRequest) {
         birthPlace: sessionData.birthPlace,
       },
       mcpData: sessionData.baziData,
-      // Use the already formatted MCP data structure
+      // Use the formatted MCP data structure
       fourPillars: {
         year: {
-          heavenlyStem: sessionData.baziData.fourPillars?.year?.heavenlyStem || '',
-          earthlyBranch: sessionData.baziData.fourPillars?.year?.earthlyBranch || '',
-          element: sessionData.baziData.fourPillars?.year?.fiveElements || '',
+          heavenlyStem: (sessionData.baziData.fourPillars?.year as Record<string, string>)?.heavenlyStem || (sessionData.baziData.fourPillars?.year as Record<string, string>)?.['天干'] || '',
+          earthlyBranch: (sessionData.baziData.fourPillars?.year as Record<string, string>)?.earthlyBranch || (sessionData.baziData.fourPillars?.year as Record<string, string>)?.['地支'] || '',
+          element: (sessionData.baziData.fourPillars?.year as Record<string, string>)?.fiveElements || (sessionData.baziData.fourPillars?.year as Record<string, string>)?.['五行'] || '',
         },
         month: {
-          heavenlyStem: sessionData.baziData.fourPillars?.month?.heavenlyStem || '',
-          earthlyBranch: sessionData.baziData.fourPillars?.month?.earthlyBranch || '',
-          element: sessionData.baziData.fourPillars?.month?.fiveElements || '',
+          heavenlyStem: (sessionData.baziData.fourPillars?.month as Record<string, string>)?.heavenlyStem || (sessionData.baziData.fourPillars?.month as Record<string, string>)?.['天干'] || '',
+          earthlyBranch: (sessionData.baziData.fourPillars?.month as Record<string, string>)?.earthlyBranch || (sessionData.baziData.fourPillars?.month as Record<string, string>)?.['地支'] || '',
+          element: (sessionData.baziData.fourPillars?.month as Record<string, string>)?.fiveElements || (sessionData.baziData.fourPillars?.month as Record<string, string>)?.['五行'] || '',
         },
         day: {
-          heavenlyStem: sessionData.baziData.fourPillars?.day?.heavenlyStem || '',
-          earthlyBranch: sessionData.baziData.fourPillars?.day?.earthlyBranch || '',
-          element: sessionData.baziData.fourPillars?.day?.fiveElements || '',
+          heavenlyStem: (sessionData.baziData.fourPillars?.day as Record<string, string>)?.heavenlyStem || (sessionData.baziData.fourPillars?.day as Record<string, string>)?.['天干'] || '',
+          earthlyBranch: (sessionData.baziData.fourPillars?.day as Record<string, string>)?.earthlyBranch || (sessionData.baziData.fourPillars?.day as Record<string, string>)?.['地支'] || '',
+          element: (sessionData.baziData.fourPillars?.day as Record<string, string>)?.fiveElements || (sessionData.baziData.fourPillars?.day as Record<string, string>)?.['五行'] || '',
         },
         hour: {
-          heavenlyStem: sessionData.baziData.fourPillars?.hour?.heavenlyStem || '',
-          earthlyBranch: sessionData.baziData.fourPillars?.hour?.earthlyBranch || '',
-          element: sessionData.baziData.fourPillars?.hour?.fiveElements || '',
+          heavenlyStem: (sessionData.baziData.fourPillars?.hour as Record<string, string>)?.heavenlyStem || (sessionData.baziData.fourPillars?.hour as Record<string, string>)?.['天干'] || '',
+          earthlyBranch: (sessionData.baziData.fourPillars?.hour as Record<string, string>)?.earthlyBranch || (sessionData.baziData.fourPillars?.hour as Record<string, string>)?.['地支'] || '',
+          element: (sessionData.baziData.fourPillars?.hour as Record<string, string>)?.fiveElements || (sessionData.baziData.fourPillars?.hour as Record<string, string>)?.['五行'] || '',
         },
       },
       // Calculate elements and patterns based on MCP data
