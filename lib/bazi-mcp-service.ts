@@ -20,6 +20,7 @@ interface BaZiMCPResponse {
   luckCycles: LuckCycle[];
   elementalClashes: string[];
   emptyElements: string[];
+  [key: string]: unknown;
 }
 
 interface PillarData {

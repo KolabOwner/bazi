@@ -2,8 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { BaZiMCPService } from '@/lib/bazi-mcp-service';
 import { TimezoneBaziService } from '@/lib/timezone-bazi-service';
 
+interface SessionData {
+  id: string;
+  nickname: string;
+  gender: string;
+  birthDate: string;
+  birthPlace: string;
+  baziData: Record<string, unknown>;
+  createdAt: string;
+}
+
 declare global {
-  var baziSessions: Map<string, unknown> | undefined;
+  var baziSessions: Map<string, SessionData> | undefined;
 }
 
 export async function POST(request: NextRequest) {

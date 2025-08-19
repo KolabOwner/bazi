@@ -13,16 +13,7 @@ interface SessionData {
   gender: string;
   birthDate: string;
   birthPlace: string;
-  baziData: {
-    fourPillars?: {
-      year?: { heavenlyStem?: string; earthlyBranch?: string; fiveElements?: string; yinYang?: string; tenGods?: string };
-      month?: { heavenlyStem?: string; earthlyBranch?: string; fiveElements?: string; yinYang?: string; tenGods?: string };
-      day?: { heavenlyStem?: string; earthlyBranch?: string; fiveElements?: string; yinYang?: string; tenGods?: string };
-      hour?: { heavenlyStem?: string; earthlyBranch?: string; fiveElements?: string; yinYang?: string; tenGods?: string };
-    };
-    deityStars?: string[];
-    [key: string]: unknown;
-  };
+  baziData: Record<string, unknown>;
   createdAt: string;
 }
 
@@ -119,7 +110,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Helper functions to convert MCP data to our format
-function calculateElementsFromMCP(mcpData: SessionData['baziData']) {
+function calculateElementsFromMCP(mcpData: Record<string, unknown>) {
   // Count elements from the four pillars using formatted data structure
   const elements = { wood: 0, fire: 0, earth: 0, metal: 0, water: 0 };
   
@@ -132,10 +123,10 @@ function calculateElementsFromMCP(mcpData: SessionData['baziData']) {
     '水': 'water'
   };
   
-  const fourPillars = mcpData.fourPillars;
+  const fourPillars = mcpData.fourPillars as Record<string, Record<string, string>>;
   if (fourPillars) {
     [fourPillars.year, fourPillars.month, fourPillars.day, fourPillars.hour]
-      .forEach((pillar) => {
+      .forEach((pillar: Record<string, string>) => {
         if (pillar?.fiveElements) {
           const chineseElement = pillar.fiveElements;
           const englishElement = elementMap[chineseElement];
@@ -157,14 +148,14 @@ function calculateElementsFromMCP(mcpData: SessionData['baziData']) {
   return elements;
 }
 
-function calculateYinYangFromMCP(mcpData: SessionData['baziData']) {
+function calculateYinYangFromMCP(mcpData: Record<string, unknown>) {
   let yin = 0;
   let yang = 0;
   
-  const fourPillars = mcpData.fourPillars;
+  const fourPillars = mcpData.fourPillars as Record<string, Record<string, string>>;
   if (fourPillars) {
     [fourPillars.year, fourPillars.month, fourPillars.day, fourPillars.hour]
-      .forEach((pillar) => {
+      .forEach((pillar: Record<string, string>) => {
         if (pillar?.yinYang) {
           const yinYang = pillar.yinYang;
           if (yinYang === '阴') {
@@ -183,17 +174,17 @@ function calculateYinYangFromMCP(mcpData: SessionData['baziData']) {
   };
 }
 
-function generatePatternsFromMCP(mcpData: SessionData['baziData']): string[] {
+function generatePatternsFromMCP(mcpData: Record<string, unknown>): string[] {
   const patterns: string[] = [];
   
   // Add patterns based on MCP data using formatted structure
-  const deityStars = mcpData.deityStars;
-  if (deityStars && deityStars.length > 0) {
+  const deityStars = mcpData.deityStars as string[];
+  if (deityStars && Array.isArray(deityStars) && deityStars.length > 0) {
     patterns.push(...deityStars.slice(0, 3).map((star: string) => `${star} Pattern`));
   }
   
   // Analyze Ten Gods for patterns
-  const fourPillars = mcpData.fourPillars;
+  const fourPillars = mcpData.fourPillars as Record<string, Record<string, string>>;
   const tenGods = [
     fourPillars?.year?.tenGods,
     fourPillars?.month?.tenGods,
