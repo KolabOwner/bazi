@@ -133,8 +133,8 @@ function AnalysisContent() {
                   <div>Gender: {analysisData.userInfo.gender === 'male' ? 'Male' : 'Female'}</div>
                   <div>Birthplace: {analysisData.userInfo.birthPlace}</div>
                   <div>Solar: {analysisData.userInfo.birthDate.toLocaleString()}</div>
-                  <div>Lunar: {analysisData.mcpData?.lunarCalendar || '农历甲申年三月初三戊寅时'}</div>
-                  {analysisData.mcpData?.eightCharacters && (
+                  <div>Lunar: {typeof analysisData.mcpData?.lunarCalendar === 'string' ? analysisData.mcpData.lunarCalendar : '农历甲申年三月初三戊寅时'}</div>
+                  {analysisData.mcpData?.eightCharacters && typeof analysisData.mcpData.eightCharacters === 'string' && (
                     <div className="col-span-2 mt-1">
                       <span className="font-medium">Eight Characters: </span>
                       <span className="font-mono text-lg">{analysisData.mcpData.eightCharacters}</span>

@@ -59,17 +59,17 @@ export function FourPillarsChart({ data }: FourPillarsChartProps) {
           <div className="text-xs text-gray-600">(天干)</div>
         </div>
         {pillars.map((pillar) => {
-          const elementKey = pillar.data.element as keyof typeof ELEMENT_ICONS;
+          const elementKey = (typeof pillar.data.element === 'string' ? pillar.data.element : 'wood') as keyof typeof ELEMENT_ICONS;
           const ElementIcon = ELEMENT_ICONS[elementKey] || Trees; // Default fallback
           const colorClass = ELEMENT_COLORS[elementKey] || 'text-gray-600'; // Default fallback
           
           return (
             <div key={`stem-${pillar.title}`} className="bg-white p-3 text-center border-b border-gray-300">
               <div className={`text-2xl font-bold ${colorClass}`}>
-                {pillar.data.heavenlyStem || '?'}
+                {typeof pillar.data.heavenlyStem === 'string' ? pillar.data.heavenlyStem : '?'}
               </div>
               <ElementIcon className={`w-5 h-5 mx-auto mt-1 ${colorClass}`} />
-              <div className="text-xs text-gray-600 mt-1 capitalize">{pillar.data.element || 'unknown'}</div>
+              <div className="text-xs text-gray-600 mt-1 capitalize">{typeof pillar.data.element === 'string' ? pillar.data.element : 'unknown'}</div>
             </div>
           );
         })}
@@ -82,13 +82,13 @@ export function FourPillarsChart({ data }: FourPillarsChartProps) {
           <div className="text-xs text-gray-600">(地支)</div>
         </div>
         {pillars.map((pillar) => {
-          const elementKey = pillar.data.element as keyof typeof ELEMENT_COLORS;
+          const elementKey = (typeof pillar.data.element === 'string' ? pillar.data.element : 'wood') as keyof typeof ELEMENT_COLORS;
           const colorClass = ELEMENT_COLORS[elementKey] || 'text-gray-600'; // Default fallback
           
           return (
             <div key={`branch-${pillar.title}`} className="bg-amber-50 p-3 text-center">
               <div className={`text-2xl font-bold ${colorClass}`}>
-                {pillar.data.earthlyBranch || '?'}
+                {typeof pillar.data.earthlyBranch === 'string' ? pillar.data.earthlyBranch : '?'}
               </div>
             </div>
           );
