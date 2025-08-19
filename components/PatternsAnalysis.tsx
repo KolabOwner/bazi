@@ -5,7 +5,7 @@ interface PatternsAnalysisProps {
   patterns: string[];
 }
 
-const PATTERN_ICONS: { [key: string]: any } = {
+const PATTERN_ICONS: { [key: string]: React.ComponentType } = {
   'Wealth': TrendingUp,
   'Academic': Brain,
   'Strong': Shield,

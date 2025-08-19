@@ -14,9 +14,42 @@ import {
   analyzeBaZiPatterns 
 } from '@/lib/bazi-calculator';
 
+interface AnalysisData {
+  userInfo: {
+    nickname: string;
+    gender: string;
+    birthDate: Date;
+    birthPlace: string;
+  };
+  mcpData: {
+    eightCharacters?: string;
+    lunarCalendar?: string;
+    [key: string]: unknown;
+  };
+  fourPillars: {
+    year: { heavenlyStem: string; earthlyBranch: string; element: string };
+    month: { heavenlyStem: string; earthlyBranch: string; element: string };
+    day: { heavenlyStem: string; earthlyBranch: string; element: string };
+    hour: { heavenlyStem: string; earthlyBranch: string; element: string };
+  };
+  elements: {
+    wood: number;
+    fire: number;
+    earth: number;
+    metal: number;
+    water: number;
+  };
+  yinYang: {
+    yin: number;
+    yang: number;
+  };
+  patterns: string[];
+  [key: string]: unknown;
+}
+
 function AnalysisContent() {
   const searchParams = useSearchParams();
-  const [analysisData, setAnalysisData] = useState<any>(null);
+  const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

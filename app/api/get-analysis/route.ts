@@ -7,6 +7,37 @@ import {
   analyzeBaZiPatterns 
 } from '@/lib/bazi-calculator';
 
+interface SessionData {
+  id: string;
+  nickname: string;
+  gender: string;
+  birthDate: string;
+  birthPlace: string;
+  baziData: {
+    fourPillars?: {
+      year?: { heavenlyStem?: string; earthlyBranch?: string; fiveElements?: string; yinYang?: string; tenGods?: string };
+      month?: { heavenlyStem?: string; earthlyBranch?: string; fiveElements?: string; yinYang?: string; tenGods?: string };
+      day?: { heavenlyStem?: string; earthlyBranch?: string; fiveElements?: string; yinYang?: string; tenGods?: string };
+      hour?: { heavenlyStem?: string; earthlyBranch?: string; fiveElements?: string; yinYang?: string; tenGods?: string };
+    };
+    deityStars?: string[];
+    [key: string]: unknown;
+  };
+  createdAt: string;
+}
+
+interface PillarData {
+  heavenlyStem?: string;
+  earthlyBranch?: string;
+  fiveElements?: string;
+  yinYang?: string;
+  tenGods?: string;
+}
+
+declare global {
+  var baziSessions: Map<string, SessionData> | undefined;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -20,7 +51,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get session data from memory (in production, use a database)
-    const sessions = (global as any).baziSessions || new Map();
+    const sessions = global.baziSessions || new Map();
     const sessionData = sessions.get(analysisId);
 
     if (!sessionData) {
@@ -88,7 +119,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Helper functions to convert MCP data to our format
-function calculateElementsFromMCP(mcpData: any) {
+function calculateElementsFromMCP(mcpData: SessionData['baziData']) {
   // Count elements from the four pillars using formatted data structure
   const elements = { wood: 0, fire: 0, earth: 0, metal: 0, water: 0 };
   
@@ -101,14 +132,19 @@ function calculateElementsFromMCP(mcpData: any) {
     '水': 'water'
   };
   
-  [mcpData.fourPillars?.year, mcpData.fourPillars?.month, mcpData.fourPillars?.day, mcpData.fourPillars?.hour]
-    .forEach(pillar => {
-      const chineseElement = pillar?.fiveElements;
-      const englishElement = elementMap[chineseElement];
-      if (englishElement) {
-        elements[englishElement] += 1;
-      }
-    });
+  const fourPillars = mcpData.fourPillars;
+  if (fourPillars) {
+    [fourPillars.year, fourPillars.month, fourPillars.day, fourPillars.hour]
+      .forEach((pillar) => {
+        if (pillar?.fiveElements) {
+          const chineseElement = pillar.fiveElements;
+          const englishElement = elementMap[chineseElement];
+          if (englishElement) {
+            elements[englishElement] += 1;
+          }
+        }
+      });
+  }
   
   // Convert to percentages
   const total = Object.values(elements).reduce((sum, val) => sum + val, 0);
@@ -121,19 +157,24 @@ function calculateElementsFromMCP(mcpData: any) {
   return elements;
 }
 
-function calculateYinYangFromMCP(mcpData: any) {
+function calculateYinYangFromMCP(mcpData: SessionData['baziData']) {
   let yin = 0;
   let yang = 0;
   
-  [mcpData.fourPillars?.year, mcpData.fourPillars?.month, mcpData.fourPillars?.day, mcpData.fourPillars?.hour]
-    .forEach(pillar => {
-      const yinYang = pillar?.yinYang;
-      if (yinYang === '阴') {
-        yin += 1;
-      } else if (yinYang === '阳') {
-        yang += 1;
-      }
-    });
+  const fourPillars = mcpData.fourPillars;
+  if (fourPillars) {
+    [fourPillars.year, fourPillars.month, fourPillars.day, fourPillars.hour]
+      .forEach((pillar) => {
+        if (pillar?.yinYang) {
+          const yinYang = pillar.yinYang;
+          if (yinYang === '阴') {
+            yin += 1;
+          } else if (yinYang === '阳') {
+            yang += 1;
+          }
+        }
+      });
+  }
   
   const total = yin + yang;
   return {
@@ -142,20 +183,22 @@ function calculateYinYangFromMCP(mcpData: any) {
   };
 }
 
-function generatePatternsFromMCP(mcpData: any): string[] {
+function generatePatternsFromMCP(mcpData: SessionData['baziData']): string[] {
   const patterns: string[] = [];
   
   // Add patterns based on MCP data using formatted structure
-  if (mcpData.deityStars && mcpData.deityStars.length > 0) {
-    patterns.push(...mcpData.deityStars.slice(0, 3).map((star: string) => `${star} Pattern`));
+  const deityStars = mcpData.deityStars;
+  if (deityStars && deityStars.length > 0) {
+    patterns.push(...deityStars.slice(0, 3).map((star: string) => `${star} Pattern`));
   }
   
   // Analyze Ten Gods for patterns
+  const fourPillars = mcpData.fourPillars;
   const tenGods = [
-    mcpData.fourPillars?.year?.tenGods,
-    mcpData.fourPillars?.month?.tenGods,
-    mcpData.fourPillars?.day?.tenGods,
-    mcpData.fourPillars?.hour?.tenGods,
+    fourPillars?.year?.tenGods,
+    fourPillars?.month?.tenGods,
+    fourPillars?.day?.tenGods,
+    fourPillars?.hour?.tenGods,
   ].filter(Boolean);
   
   if (tenGods.includes('正财') || tenGods.includes('偏财')) {

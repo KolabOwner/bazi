@@ -45,8 +45,6 @@ const ELEMENT_CONFIG = {
 };
 
 export function ElementsChart({ data }: ElementsChartProps) {
-  const totalPercentage = Object.values(data).reduce((sum, val) => sum + val, 0);
-  
   return (
     <div className="space-y-4">
       {/* Circular Chart */}

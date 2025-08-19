@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { BaZiMCPService } from '@/lib/bazi-mcp-service';
 import { TimezoneBaziService } from '@/lib/timezone-bazi-service';
 
+declare global {
+  var baziSessions: Map<string, unknown> | undefined;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -62,8 +66,8 @@ export async function POST(request: NextRequest) {
 
     // TODO: Store sessionData in database
     // For now, we'll store it in a simple in-memory cache
-    (global as any).baziSessions = (global as any).baziSessions || new Map();
-    (global as any).baziSessions.set(analysisId, sessionData);
+    global.baziSessions = global.baziSessions || new Map();
+    global.baziSessions.set(analysisId, sessionData);
 
     return NextResponse.json({ 
       id: analysisId, 

@@ -54,7 +54,7 @@ export function DatePicker({ value, onChange, open, onOpenChange }: DatePickerPr
         scrollToCenter(minuteRef, selectedMinute);
       }, 100);
     }
-  }, [open]); // Only trigger when modal opens, not on state changes
+  }, [open, selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute, years]);
 
   const handleConfirm = () => {
     const newDate = new Date(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);

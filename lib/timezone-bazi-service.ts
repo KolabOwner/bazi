@@ -46,7 +46,7 @@ export class TimezoneBaziService {
       if (cityInfo && cityInfo.length > 0) {
         return cityInfo[0].timezone;
       }
-    } catch (error) {
+    } catch {
       console.warn(`Could not find timezone for ${city}, using fallback`);
     }
 
@@ -58,7 +58,7 @@ export class TimezoneBaziService {
    * Prepare properly timezone-adjusted datetime for BaZi calculation
    */
   public prepareBaziInput(input: BaziInput): string {
-    const { birthDate, birthTime, birthPlace, gender } = input;
+    const { birthDate, birthTime, birthPlace } = input;
     
     try {
       // Get timezone for the birth location

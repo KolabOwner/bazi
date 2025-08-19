@@ -10,8 +10,12 @@ interface Message {
   timestamp: Date;
 }
 
+interface BaZiData {
+  [key: string]: unknown;
+}
+
 interface BaZiChatbotProps {
-  baziData: any;
+  baziData: BaZiData;
 }
 
 export function BaZiChatbot({ baziData }: BaZiChatbotProps) {
@@ -81,7 +85,7 @@ export function BaZiChatbot({ baziData }: BaZiChatbotProps) {
         };
         setMessages(prev => [...prev, fallbackMessage]);
       }
-    } catch (error) {
+    } catch {
       // Provide a mock response for demonstration
       const mockResponses = [
         "Based on your Four Pillars chart, you have a strong Metal element which indicates leadership qualities and determination.",
